@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Brew Loyalty MVP — Odds Cafe
 
-## Getting Started
+Digital loyalty stamp card for **Odds Cafe**, West Asheville NC.
 
-First, run the development server:
+Buy 8 coffees → Get 1 FREE. No app download needed.
+
+## Quick Start
 
 ```bash
+npm install
+cp .env.example .env.local
+# Edit .env.local and set ODDS_ADMIN_PASSWORD
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Pages
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Route | Who | What |
+|-------|-----|------|
+| `/` | Customer | Enter phone number |
+| `/card?phone=XXXXXXXXXX` | Customer | View stamp card |
+| `/admin` | Audrie | Password login |
+| `/admin/customer` | Audrie | Add stamp / redeem reward |
+| `/qr` | Audrie | Printable QR code for counter |
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+```
+ODDS_ADMIN_PASSWORD=your-secure-password-here
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Set in `.env.local` locally. Set in Vercel dashboard for production.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy to Vercel
 
-## Deploy on Vercel
+1. Push to GitHub: `juanitok94/brew-loyalty-mvp`
+2. Import repo in Vercel dashboard
+3. Add `ODDS_ADMIN_PASSWORD` environment variable
+4. Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+> **Note:** The JSON file store works in development. For production with persistent data across deployments, upgrade to Vercel KV. See `src/lib/stamps.ts` to swap the backend — it is one file.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tech Stack
+
+- Next.js 15, TypeScript, Tailwind CSS 4, App Router
+- PWA (manifest + apple-touch-icon)
+- Data: `src/data/stamps.json` (flat file, no database)
+
+## Owner: Peachy Kean DevOps LLC
+
+Built for Audrie Blomquist / Odds Cafe by John Kean.
