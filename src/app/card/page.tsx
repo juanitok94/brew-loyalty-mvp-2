@@ -142,13 +142,12 @@ useEffect(() => {
       <div className="w-full max-w-sm space-y-6">
         {/* Header */}
         <div className="text-center space-y-1">
-          <div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-full text-2xl mb-3"
-            style={{ background: "var(--brown)", color: "#fff" }}
-          >
-            ☕
-          </div>
-          <h1 className="text-2xl font-bold" style={{ color: "var(--brown-dark)" }}>
+          <img
+  src="/odds-logo.png"
+  alt="Odds Cafe"
+  className="mx-auto w-20 h-20 object-contain mb-3"
+/>
+          <h1 className="text-2xl font-bold" className="text-2xl font-bold text-[#8B1E1E]">
             Odds Cafe
           </h1>
           <p className="text-sm" style={{ color: "var(--brown-light)" }}>
@@ -199,7 +198,7 @@ useEffect(() => {
             className="flex-1 rounded-xl p-3 text-center"
             style={{ background: "var(--cream)" }}
           >
-            <p className="text-xl font-bold" style={{ color: "var(--brown-dark)" }}>
+            <p className="text-xl font-bold" className="text-2xl font-bold text-[#8B1E1E]">
               {data.stamps}
             </p>
             <p className="text-xs" style={{ color: "var(--brown-light)" }}>
@@ -210,7 +209,7 @@ useEffect(() => {
             className="flex-1 rounded-xl p-3 text-center"
             style={{ background: "var(--cream)" }}
           >
-            <p className="text-xl font-bold" style={{ color: "var(--brown-dark)" }}>
+            <p className="text-xl font-bold" className="text-2xl font-bold text-[#8B1E1E]">
               {data.redeemed}
             </p>
             <p className="text-xs" style={{ color: "var(--brown-light)" }}>

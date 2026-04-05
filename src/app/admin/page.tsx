@@ -41,13 +41,12 @@ export default function AdminLoginPage() {
     <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center space-y-2">
-          <div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-full text-2xl mb-3"
-            style={{ background: "var(--brown)", color: "#fff" }}
-          >
-            🔑
-          </div>
-          <h1 className="text-2xl font-bold" style={{ color: "var(--brown-dark)" }}>
+          <img
+  src="/odds-logo.png"
+  alt="Odds Cafe"
+  className="mx-auto w-20 h-20 object-contain mb-3"
+/>
+          <h1 className="text-2xl font-bold text-[#8B1E1E]">
             Odds Cafe Admin
           </h1>
           <p className="text-sm" style={{ color: "var(--brown-light)" }}>

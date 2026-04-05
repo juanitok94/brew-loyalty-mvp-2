@@ -49,13 +49,12 @@ export default function HomePage() {
       <div className="w-full max-w-sm space-y-8">
         {/* Logo / Header */}
         <div className="text-center space-y-2">
-          <div
-            className="inline-flex items-center justify-center w-20 h-20 rounded-full text-3xl mb-4"
-            style={{ background: "var(--brown)", color: "#fff" }}
-          >
-            ☕
-          </div>
-          <h1 className="text-3xl font-bold tracking-tight" style={{ color: "var(--brown-dark)" }}>
+          <img
+  src="/odds-logo.png"
+  alt="Odds Cafe"
+  className="mx-auto w-24 h-24 object-contain mb-4"
+/>
+          <h1 className="text-3xl font-bold tracking-tight" className="text-3xl font-bold tracking-tight text-[#8B1E1E]">
             Odds Cafe
           </h1>
           <p className="text-base" style={{ color: "var(--brown-light)" }}>
@@ -71,7 +70,7 @@ export default function HomePage() {
           <p className="text-sm font-medium" style={{ color: "var(--brown-light)" }}>
             Buy {STAMPS_REQUIRED} coffees
           </p>
-          <p className="text-2xl font-bold" style={{ color: "var(--brown-dark)" }}>
+          <p className="text-2xl font-bold" className="text-3xl font-bold tracking-tight text-[#8B1E1E]">
             Get 1 FREE
           </p>
           <p className="text-xs" style={{ color: "var(--brown-light)" }}>
