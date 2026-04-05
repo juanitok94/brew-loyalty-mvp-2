@@ -54,7 +54,7 @@ export default function HomePage() {
   alt="Odds Cafe"
   className="mx-auto w-24 h-24 object-contain mb-4"
 />
-          <h1 className="text-3xl font-bold tracking-tight" className="text-3xl font-bold tracking-tight text-[#8B1E1E]">
+          <h1 className="text-3xl font-bold tracking-tight text-[#8B1E1E]">
             Odds Cafe
           </h1>
           <p className="text-base" style={{ color: "var(--brown-light)" }}>
