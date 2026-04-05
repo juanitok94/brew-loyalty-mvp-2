@@ -147,7 +147,7 @@ useEffect(() => {
   alt="Odds Cafe"
   className="mx-auto w-20 h-20 object-contain mb-3"
 />
-          <h1 className="text-2xl font-bold" className="text-2xl font-bold text-[#8B1E1E]">
+          <h1 className="text-2xl font-bold text-[#8B1E1E]">
             Odds Cafe
           </h1>
           <p className="text-sm" style={{ color: "var(--brown-light)" }}>
