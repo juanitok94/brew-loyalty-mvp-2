@@ -198,7 +198,7 @@ useEffect(() => {
             className="flex-1 rounded-xl p-3 text-center"
             style={{ background: "var(--cream)" }}
           >
-            <p className="text-xl font-bold" className="text-2xl font-bold text-[#8B1E1E]">
+            <p className="text-xl font-bold text-[#8B1E1E]">
               {data.stamps}
             </p>
             <p className="text-xs" style={{ color: "var(--brown-light)" }}>
@@ -209,7 +209,7 @@ useEffect(() => {
             className="flex-1 rounded-xl p-3 text-center"
             style={{ background: "var(--cream)" }}
           >
-            <p className="text-xl font-bold" className="text-2xl font-bold text-[#8B1E1E]">
+            <p className="text-xl font-bold text-[#8B1E1E]">
               {data.redeemed}
             </p>
             <p className="text-xs" style={{ color: "var(--brown-light)" }}>
