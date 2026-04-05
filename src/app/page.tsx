@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { STAMPS_REQUIRED } from "@/lib/constants";
 
 export default function HomePage() {
   const router = useRouter();
@@ -68,7 +69,7 @@ export default function HomePage() {
           style={{ background: "var(--cream)" }}
         >
           <p className="text-sm font-medium" style={{ color: "var(--brown-light)" }}>
-            Buy 8 coffees
+            Buy {STAMPS_REQUIRED} coffees
           </p>
           <p className="text-2xl font-bold" style={{ color: "var(--brown-dark)" }}>
             Get 1 FREE

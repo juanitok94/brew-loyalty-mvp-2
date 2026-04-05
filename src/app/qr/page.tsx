@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
+import { STAMPS_REQUIRED } from "@/lib/constants";
 
 export default function QRPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -51,7 +52,7 @@ export default function QRPage() {
             Scan to join our loyalty program
           </p>
           <p className="text-sm" style={{ color: "var(--brown-light)" }}>
-            Buy 8 coffees, get 1 FREE
+            Buy {STAMPS_REQUIRED} coffees, get 1 FREE
           </p>
           <p className="text-xs" style={{ color: "var(--stamp-empty)" }}>
             No app download needed

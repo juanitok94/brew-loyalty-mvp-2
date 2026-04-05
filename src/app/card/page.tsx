@@ -41,40 +41,75 @@ function CardContent() {
   const [error, setError] = useState("");
   const [qrCodeSrc, setQrCodeSrc] = useState("");
 
+  async function loadCard(phone: string) {
+    const response = await fetch(`/api/stamps?phone=${encodeURIComponent(phone)}`, {
+      cache: "no-store",
+    });
+    const payload = await response.json();
+
+    if (!response.ok) {
+      throw new Error(payload?.error ?? "Failed to load card");
+    }
+
+    setData(payload);
+    setError("");
+  }
+
   useEffect(() => {
     if (!rawPhone) {
       router.replace("/");
       return;
     }
-    fetch(`/api/stamps?phone=${encodeURIComponent(rawPhone)}`)
-      .then((r) => r.json())
-      .then((d) => {
-        setData(d);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("Could not load your card. Please try again.");
-        setLoading(false);
-      });
+
+    let cancelled = false;
+
+    const refreshCard = async () => {
+      try {
+        await loadCard(rawPhone);
+        if (!cancelled) {
+          setLoading(false);
+        }
+      } catch {
+        if (!cancelled) {
+          setError("Could not load your card. Please try again.");
+          setLoading(false);
+        }
+      }
+    };
+
+    void refreshCard();
+    const intervalId = window.setInterval(() => {
+      void refreshCard();
+    }, 5000);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+    };
   }, [rawPhone, router]);
 
-  useEffect(() => {
-    if (!data?.phone) {
-      setQrCodeSrc("");
-      return;
-    }
+  const [qrInitialized, setQrInitialized] = useState(false);
 
-    QRCode.toDataURL(data.phone, {
-      margin: 1,
-      width: 192,
-      color: {
-        dark: "#6B4F36",
-        light: "#FFFFFF",
-      },
+useEffect(() => {
+  if (!data?.phone || qrInitialized) return;
+
+  const qrTarget = new URL("/admin/customer", window.location.origin);
+  qrTarget.searchParams.set("phone", data.phone);
+
+  QRCode.toDataURL(qrTarget.toString(), {
+    margin: 1,
+    width: 192,
+    color: {
+      dark: "#6B4F36",
+      light: "#FFFFFF",
+    },
+  })
+    .then((src) => {
+      setQrCodeSrc(src);
+      setQrInitialized(true);
     })
-      .then(setQrCodeSrc)
-      .catch(() => setQrCodeSrc(""));
-  }, [data?.phone]);
+    .catch(() => setQrCodeSrc(""));
+}, [data?.phone, qrInitialized]);
 
   if (loading) {
     return (

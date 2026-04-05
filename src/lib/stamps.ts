@@ -1,5 +1,6 @@
 import { connect, type Connection, type Table } from "@lancedb/lancedb";
 import { Field, Int32, Schema, Utf8 } from "apache-arrow";
+import { STAMPS_REQUIRED } from "@/lib/constants";
 
 export type CustomerRecord = {
   stamps: number;
@@ -218,7 +219,7 @@ export async function addStamp(phone: string): Promise<CustomerRecord> {
 
 export async function redeemReward(phone: string): Promise<CustomerRecord | null> {
   const existing = await findCustomerRow(phone);
-  if (!existing || existing.stamps < 8) {
+  if (!existing || existing.stamps < STAMPS_REQUIRED) {
     return null;
   }
 
@@ -242,5 +243,3 @@ export async function redeemReward(phone: string): Promise<CustomerRecord | null
 
   return rowToCustomerRecord(next);
 }
-
-export { STAMPS_REQUIRED } from "@/lib/constants";

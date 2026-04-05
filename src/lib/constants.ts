@@ -1,1 +1,1 @@
-export const STAMPS_REQUIRED = 8;
+export const STAMPS_REQUIRED = 9;

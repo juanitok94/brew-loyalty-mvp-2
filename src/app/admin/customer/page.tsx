@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import CustomerScanPanel from "@/components/CustomerScanPanel";
 import { STAMPS_REQUIRED } from "@/lib/constants";
@@ -14,8 +14,23 @@ type CustomerData = {
 
 const TOTAL = STAMPS_REQUIRED;
 
+function extractPhoneDigits(value: string): string {
+  try {
+    const url = new URL(value);
+    const phoneParam = url.searchParams.get("phone");
+    if (phoneParam) {
+      return phoneParam.replace(/\D/g, "").slice(-10);
+    }
+  } catch {
+    // Older QR codes may still contain raw phone text.
+  }
+
+  return value.replace(/\D/g, "").slice(-10);
+}
+
 export default function AdminCustomerPage() {
   const router = useRouter();
+  const loadedQueryPhoneRef = useRef(false);
   const [password, setPassword] = useState("");
   const [phoneInput, setPhoneInput] = useState("");
   const [customer, setCustomer] = useState<CustomerData | null>(null);
@@ -28,7 +43,7 @@ export default function AdminCustomerPage() {
   useEffect(() => {
     const pw = sessionStorage.getItem("adminPw");
     if (!pw) {
-      router.replace("/admin");
+      router.replace(`/admin${window.location.search}`);
       return;
     }
     setPassword(pw);
@@ -67,7 +82,7 @@ export default function AdminCustomerPage() {
       });
 
       if (res.status === 401) {
-        router.replace("/admin");
+        router.replace(`/admin${window.location.search}`);
         return;
       }
 
@@ -96,8 +111,29 @@ export default function AdminCustomerPage() {
     await loadCustomerByDigits(phoneInput.replace(/\D/g, ""));
   }
 
+  useEffect(() => {
+    if (!password || loadedQueryPhoneRef.current) {
+      return;
+    }
+
+    const queryPhone = new URLSearchParams(window.location.search).get("phone");
+    const digits = queryPhone?.replace(/\D/g, "").slice(-10) ?? "";
+    if (digits.length !== 10) {
+      return;
+    }
+
+    loadedQueryPhoneRef.current = true;
+    setPhoneInput(formatDisplay(digits));
+    void loadCustomerByDigits(digits);
+  }, [password]);
+
   async function handleScan(scannedValue: string) {
-    const digits = scannedValue.replace(/\D/g, "").slice(-10);
+    const digits = extractPhoneDigits(scannedValue);
+    if (digits.length !== 10) {
+      setError("Could not read a valid phone number from that QR code.");
+      return;
+    }
+
     setPhoneInput(formatDisplay(digits));
     setShowScanner(false);
     await loadCustomerByDigits(digits);
@@ -113,7 +149,7 @@ export default function AdminCustomerPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone: customer.phone.replace(/\D/g, ""), password }),
       });
-      if (res.status === 401) { router.replace("/admin"); return; }
+      if (res.status === 401) { router.replace(`/admin${window.location.search}`); return; }
       const data = await res.json();
       setCustomer(data);
       setMessage(data.stamps >= TOTAL ? "Stamp added! Reward unlocked!" : "Stamp added!");
@@ -134,7 +170,7 @@ export default function AdminCustomerPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone: customer.phone.replace(/\D/g, ""), password }),
       });
-      if (res.status === 401) { router.replace("/admin"); return; }
+      if (res.status === 401) { router.replace(`/admin${window.location.search}`); return; }
       if (!res.ok) {
         const err = await res.json();
         setError(err.error ?? "Redeem failed.");

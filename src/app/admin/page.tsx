@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
       }
       // 404 means password was valid but customer not found — that's fine
       sessionStorage.setItem("adminPw", password);
-      router.push("/admin/customer");
+      router.push(`/admin/customer${window.location.search}`);
     } catch {
       setError("Something went wrong.");
       setLoading(false);
