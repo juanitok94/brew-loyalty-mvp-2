@@ -4,41 +4,89 @@
 
 Digital loyalty stamp card MVP for **Odds Cafe**, West Asheville NC (owner: Audrie Blomquist).
 
-- Customer scans QR → enters phone → sees 8-stamp card → earns free drink
-- Owner uses /admin to add stamps and redeem rewards
-- No database — JSON file only (src/data/stamps.json)
-- PWA (no app download required)
+* Customer scans QR → enters phone → sees stamp card → earns free drink
+* Owner uses /admin to add stamps and redeem rewards
+* Current data layer: JSON file (src/data/stamps.json) → migrating to Supabase
+* PWA (no app download required)
+
+---
+
+## Global Workflow & Patterns
+
+This project follows the Peachy Kean DevOps AI playbook:
+
+https://github.com/juanitok94/ai-playbook
+
+Use that repo for:
+
+* **AI-OPERATING-SYSTEM.md** → roles, rules, XP loop
+* **XP-WORKFLOW.md** → sprint execution
+* **PATTERNS/SUPABASE.md** → database + persistence patterns
+
+---
+
+## Project Source of Truth
+
+All project-specific context lives here:
+
+* `docs/PROJECT-BRAIN.md` → master context
+* `docs/DECISIONS.md` → locked decisions only
+* `docs/ARCHITECTURE.md` → system design
+
+If it’s not in `/docs`, it doesn’t exist.
+
+---
+
+## Execution Model
+
+* Implementation is driven by **SESSION-BRIEF.md**
+* SESSION-BRIEF is generated fresh each sprint (not permanent)
+* Claude Code executes only from SESSION-BRIEF
+* Do not infer beyond the brief
+* Stop and ask if anything is ambiguous
+
+---
 
 ## Stack
 
-- Next.js 15 (App Router), TypeScript, Tailwind CSS 4
-- Data: `src/data/stamps.json` (flat file, no DB)
-- Deploy: Vercel + GitHub (juanitok94/brew-loyalty-mvp)
+* Next.js 15 (App Router), TypeScript, Tailwind CSS 4
+* Current data: `src/data/stamps.json` (flat file, being replaced)
+* Target data layer: Supabase (Postgres, server-side only)
+* Deploy: Vercel + GitHub (juanitok94/brew-loyalty-mvp)
 
-## Brand
+---
 
-- Coffee brown accent: `#6B4F36`
-- CSS vars: `--brown`, `--brown-light`, `--brown-dark`, `--cream`, `--stamp-empty`, `--stamp-filled`
-- System font stack (-apple-system), Apple.com aesthetic, mobile-first
+## Core Constraints (V1.1)
+
+* Supabase = persistence layer
+* No Supabase Auth
+* Phone = lookup only (not a security boundary)
+* All DB access = server-side only (service role)
+* Event-based model (stamp_events → derived state)
+* No client-side Supabase usage
+
+---
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/data/stamps.json` | All customer data (phone → stamps/lastVisit/redeemed) |
-| `src/lib/stamps.ts` | Data access layer: readDB/writeDB/addStamp/redeemReward |
-| `src/lib/auth.ts` | Admin password check (ODDS_ADMIN_PASSWORD env var) |
-| `src/app/api/stamps/route.ts` | GET/POST — customer lookup/create |
-| `src/app/api/admin/stamp/route.ts` | POST — add stamp (password protected) |
-| `src/app/api/admin/redeem/route.ts` | POST — redeem reward (password protected) |
-| `src/app/api/admin/lookup/route.ts` | POST — lookup customer (password protected) |
-| `src/app/page.tsx` | Customer: enter phone number |
-| `src/app/card/page.tsx` | Customer: view stamp card |
-| `src/app/admin/page.tsx` | Admin: password login |
-| `src/app/admin/customer/page.tsx` | Admin: stamp + redeem dashboard |
-| `src/app/qr/page.tsx` | Printable QR code for counter display |
+| File                                | Purpose                                            |
+| ----------------------------------- | -------------------------------------------------- |
+| `src/data/stamps.json`              | Current MVP data store (temporary)                 |
+| `src/lib/stamps.ts`                 | Data access layer (will transition to Supabase)    |
+| `src/lib/auth.ts`                   | Admin password check (ODDS_ADMIN_PASSWORD env var) |
+| `src/app/api/stamps/route.ts`       | GET/POST — customer lookup/create                  |
+| `src/app/api/admin/stamp/route.ts`  | POST — add stamp                                   |
+| `src/app/api/admin/redeem/route.ts` | POST — redeem reward                               |
+| `src/app/api/admin/lookup/route.ts` | POST — lookup customer                             |
+| `src/app/page.tsx`                  | Customer: enter phone                              |
+| `src/app/card/page.tsx`             | Customer: view card                                |
+| `src/app/admin/page.tsx`            | Admin login                                        |
+| `src/app/admin/customer/page.tsx`   | Admin dashboard                                    |
+| `src/app/qr/page.tsx`               | QR code display                                    |
 
-## Data Shape
+---
+
+## Current Data Shape (MVP)
 
 ```json
 {
@@ -50,26 +98,52 @@ Digital loyalty stamp card MVP for **Odds Cafe**, West Asheville NC (owner: Audr
 }
 ```
 
-Phone keys are always stored as E.164 (`+1XXXXXXXXXX`).
+Phone keys are stored as E.164 (`+1XXXXXXXXXX`).
 
-## Environment Variables
-
-```
-ODDS_ADMIN_PASSWORD=your-secure-password-here
-```
-
-Set in `.env.local` for dev, and in Vercel dashboard for production.
+---
 
 ## Stamp Logic
 
-- 8 stamps = 1 free drink reward unlocked
-- On redeem: stamps reset to 0, redeemed count increments
-- Customers are auto-created on first phone lookup
+* 9 stamps = 1 free drink reward unlocked
+* On redeem: stamps reset to 0, redeemed count increments
+* Customers are auto-created on first phone lookup
+
+---
 
 ## Admin Auth Pattern
 
-Admin password is sent with every API request body (not a session cookie). The admin page stores it in `sessionStorage` for the session. This is MVP-grade security appropriate for a small cafe.
+* Admin password sent with each API request body
+* Stored in `sessionStorage` during session
+* No cookies or session auth (MVP-grade, acceptable risk)
 
-## Vercel Deployment Note
+---
 
-`src/data/stamps.json` is writable in development but **read-only on Vercel's serverless filesystem**. For production persistence, upgrade to Vercel KV (Redis) or a simple Postgres. The data layer is isolated in `src/lib/stamps.ts` — swapping the backend is a single-file change.
+## Guardrails
+
+* Do not make architecture decisions during implementation
+* Do not expand scope beyond SESSION-BRIEF
+* Do not bypass `src/lib/stamps.ts` for data access
+* Never expose service role key to client code
+* Stop and ask if anything is unclear
+
+---
+
+## Definition of Done
+
+* Acceptance tests in SESSION-BRIEF pass
+* DECISIONS.md updated if needed
+* Feature verified in preview or production
+* Claude + ChatGPT review complete
+* Juan signs off
+
+---
+
+## Migration Note (Current Priority)
+
+`src/data/stamps.json` is writable in development but **read-only on Vercel**.
+
+Next step:
+
+→ Replace JSON storage with Supabase using patterns from `ai-playbook/PATTERNS/SUPABASE.md`
+
+This should be implemented without changing UI behavior.
