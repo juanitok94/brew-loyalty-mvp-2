@@ -160,6 +160,27 @@ export default function AdminCustomerPage() {
     }
   }
 
+  async function removeStamp() {
+    if (!customer) return;
+    setActionLoading(true);
+    setMessage("");
+    try {
+      const res = await fetch("/api/admin/remove-stamp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: customer.phone.replace(/\D/g, ""), password }),
+      });
+      if (res.status === 401) { router.replace(`/admin${window.location.search}`); return; }
+      const data = await res.json();
+      setCustomer(data);
+      setMessage("Stamp removed.");
+    } catch {
+      setError("Failed to remove stamp.");
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
   async function redeemReward() {
     if (!customer) return;
     setActionLoading(true);
@@ -333,12 +354,20 @@ export default function AdminCustomerPage() {
               >
                 {actionLoading ? "..." : "+ Add Stamp"}
               </button>
+              <button
+                onClick={removeStamp}
+                disabled={actionLoading || customer.stamps === 0}
+                className="flex-1 py-3 rounded-xl font-semibold text-sm disabled:opacity-40"
+                style={{ background: "var(--cream)", color: "var(--brown-dark)" }}
+              >
+                {actionLoading ? "..." : "− Remove Stamp"}
+              </button>
               {isReady && (
                 <button
                   onClick={redeemReward}
                   disabled={actionLoading}
                   className="flex-1 py-3 rounded-xl font-semibold text-sm disabled:opacity-40"
-                  style={{ background: "var(--cream)", color: "var(--brown-dark)" }}
+                  style={{ background: "var(--brown)", color: "#fff" }}
                 >
                   {actionLoading ? "..." : "Redeem Reward"}
                 </button>

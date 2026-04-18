@@ -183,7 +183,7 @@ async function logEvent(params: {
   shopId: string;
   customerId: string;
   loyaltyCardId: string;
-  eventType: "stamp_added" | "reward_redeemed";
+  eventType: "stamp_added" | "stamp_removed" | "reward_redeemed";
   stampDelta: number;
   note?: string;
 }): Promise<void> {
@@ -250,6 +250,32 @@ export async function addStamp(phone: string): Promise<CustomerRecord> {
     eventType: "stamp_added",
     stampDelta: 1,
   });
+
+  return toCustomerRecord(updatedCard);
+}
+
+export async function removeStamp(phone: string): Promise<CustomerRecord | null> {
+  const shop = await getDefaultShop();
+  const customer = await findCustomerByPhone(phone);
+
+  if (!customer) return null;
+
+  const card = await findLoyaltyCard(shop.id, customer.id);
+  if (!card || card.stamp_count <= 0) return null;
+
+const updatedCard = await updateCard(card.id, {
+  stamp_count: Math.max(0, card.stamp_count - 1),
+  last_stamp_at: isoNow(),
+});
+
+ await logEvent({
+  shopId: shop.id,
+  customerId: customer.id,
+  loyaltyCardId: card.id,
+  eventType: "stamp_added",
+  stampDelta: -1,
+  note: "admin_correction",
+});
 
   return toCustomerRecord(updatedCard);
 }
