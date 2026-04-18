@@ -171,6 +171,11 @@ export default function AdminCustomerPage() {
         body: JSON.stringify({ phone: customer.phone.replace(/\D/g, ""), password }),
       });
       if (res.status === 401) { router.replace(`/admin${window.location.search}`); return; }
+      if (!res.ok) {
+        const err = await res.json();
+        setError(err.error ?? "Remove stamp failed.");
+        return;
+      }
       const data = await res.json();
       setCustomer(data);
       setMessage("Stamp removed.");

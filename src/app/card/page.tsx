@@ -182,7 +182,7 @@ useEffect(() => {
           className="rounded-2xl p-6"
           style={{ background: isReady ? "#FFF9F0" : "#fff", border: "1.5px solid var(--stamp-empty)" }}
         >
-          <div className="grid grid-cols-4 gap-3 justify-items-center">
+          <div className="grid grid-cols-3 gap-3 justify-items-center">
             {Array.from({ length: TOTAL }).map((_, i) => (
               <StampCircle key={i} filled={i < data.stamps} index={i} />
             ))}
