@@ -350,28 +350,30 @@ export default function AdminCustomerPage() {
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3">
-              <button
-                onClick={addStamp}
-                disabled={actionLoading || customer.stamps >= TOTAL}
-                className="flex-1 py-3 rounded-xl font-semibold text-white text-sm disabled:opacity-40"
-                style={{ background: "var(--brown)" }}
-              >
-                {actionLoading ? "..." : "+ Add Stamp"}
-              </button>
-              <button
-                onClick={removeStamp}
-                disabled={actionLoading || customer.stamps === 0}
-                className="flex-1 py-3 rounded-xl font-semibold text-sm disabled:opacity-40"
-                style={{ background: "var(--cream)", color: "var(--brown-dark)" }}
-              >
-                {actionLoading ? "..." : "− Remove Stamp"}
-              </button>
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-3">
+                <button
+                  onClick={addStamp}
+                  disabled={actionLoading || customer.stamps >= TOTAL}
+                  className="flex-1 py-3 rounded-xl font-semibold text-white text-sm disabled:opacity-40"
+                  style={{ background: "var(--brown)" }}
+                >
+                  {actionLoading ? "..." : "+ Add Stamp"}
+                </button>
+                <button
+                  onClick={removeStamp}
+                  disabled={actionLoading || customer.stamps === 0}
+                  className="flex-1 py-3 rounded-xl font-semibold text-sm disabled:opacity-40"
+                  style={{ background: "var(--cream)", color: "var(--brown-dark)" }}
+                >
+                  {actionLoading ? "..." : "− Remove Stamp"}
+                </button>
+              </div>
               {isReady && (
                 <button
                   onClick={redeemReward}
                   disabled={actionLoading}
-                  className="flex-1 py-3 rounded-xl font-semibold text-sm disabled:opacity-40"
+                  className="w-full py-3 rounded-xl font-semibold text-sm disabled:opacity-40"
                   style={{ background: "var(--brown)", color: "#fff" }}
                 >
                   {actionLoading ? "..." : "Redeem Reward"}

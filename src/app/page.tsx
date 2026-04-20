@@ -55,7 +55,7 @@ export default function HomePage() {
   className="mx-auto w-24 h-24 object-contain mb-4"
 />
           <h1 className="text-3xl font-bold tracking-tight text-[#8B1E1E]">
-            Odds Cafe
+            Odds Perk Pass Sign-Up
           </h1>
           <p className="text-base" style={{ color: "var(--brown-light)" }}>
             West Asheville&apos;s favorite cup
@@ -68,10 +68,10 @@ export default function HomePage() {
           style={{ background: "var(--cream)" }}
         >
           <p className="text-sm font-medium" style={{ color: "var(--brown-light)" }}>
-            Buy {STAMPS_REQUIRED} coffees
+            Buy {STAMPS_REQUIRED} coffee/tea drinks
           </p>
           <p className="text-2xl font-bold text-[#8B1E1E]">
-            Get 1 FREE
+            Get the 10th FREE
           </p>
           <p className="text-xs" style={{ color: "var(--brown-light)" }}>
             No app download needed
@@ -115,6 +115,9 @@ export default function HomePage() {
           >
             {loading ? "Loading..." : "See My Card"}
           </button>
+          <p className="text-[14px] text-gray-500 mt-2 text-center">
+            Not valid on smoothies or frappes. One stamp per drink
+          </p>
         </form>
       </div>
     </main>
