@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; background: #faf8f5; font-family: 'Instrument Sans', system-ui, sans-serif; padding: 20px 24px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 12px; }
+  button { font-family: 'Instrument Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: opacity 0.15s; }
+  button:hover { opacity: 0.85; }
+  .btn-primary { background: #6B4F36; color: #fff; padding: 12px 24px; border-radius: 12px; }
+  .btn-outline { background: transparent; color: #6B4F36; padding: 11px 24px; border-radius: 12px; border: 1.5px solid #6B4F36; }
+  .btn-ghost { background: #F5EFE6; color: #4A3526; padding: 12px 24px; border-radius: 12px; }
+  .btn-disabled { background: #6B4F36; color: #fff; padding: 12px 24px; border-radius: 12px; opacity: 0.4; }
+  .btn-danger { background: #DC2626; color: #fff; padding: 12px 24px; border-radius: 12px; }
+  .btn-sm { font-size: 13px; padding: 8px 16px; border-radius: 10px; }
+  .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: #8B6F56; font-weight: 600; margin-top: 4px; text-align: center; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+</style>
+</head><body>
+<div class="row">
+  <div class="col"><button class="btn-primary">See My Card</button><div class="label">Primary</div></div>
+  <div class="col"><button class="btn-outline">View QR Code</button><div class="label">Outline</div></div>
+  <div class="col"><button class="btn-ghost">− Remove Stamp</button><div class="label">Ghost</div></div>
+  <div class="col"><button class="btn-disabled" disabled>Loading...</button><div class="label">Disabled</div></div>
+</div>
+<div class="row">
+  <div class="col"><button class="btn-primary btn-sm">+ Add Stamp</button><div class="label">Small</div></div>
+  <div class="col"><button class="btn-danger btn-sm">Redeem Reward</button><div class="label">Danger sm</div></div>
+</div>
+</body></html>

@@ -1,31 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Inknut_Antiqua, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 
-const inknutAntiqua = Inknut_Antiqua({
-  subsets: ["latin"],
-  weight: "500",
-  variable: "--font-display",
-});
-
-const instrumentSans = Instrument_Sans({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  variable: "--font-body",
-});
-
 export const metadata: Metadata = {
-  title: "Rowan Coffee — Loyalty Card",
-  description: "Your digital loyalty card for Rowan Coffee, Asheville NC",
+  title: "Odds Cafe — Loyalty Card",
+  description: "Your digital loyalty stamp card for Odds Cafe, West Asheville NC",
+  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Rowan Coffee",
+    title: "Odds Cafe",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#6B4F36",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -37,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inknutAntiqua.variable} ${instrumentSans.variable}`}>
+    <html lang="en">
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>

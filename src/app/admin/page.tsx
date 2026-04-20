@@ -16,7 +16,6 @@ export default function AdminLoginPage() {
       return;
     }
     setLoading(true);
-    // Verify password by trying a lookup with a known test
     try {
       const res = await fetch("/api/admin/lookup", {
         method: "POST",
@@ -28,7 +27,7 @@ export default function AdminLoginPage() {
         setLoading(false);
         return;
       }
-      // 404 means password was valid but customer not found — that's fine
+      // 404 = valid password, customer not found — that's fine
       sessionStorage.setItem("adminPw", password);
       router.push(`/admin/customer${window.location.search}`);
     } catch {
@@ -38,57 +37,70 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12">
-      <div className="w-full max-w-sm space-y-8">
-        <div className="text-center space-y-2">
-          <img
-  src="/odds-logo.png"
-  alt="Odds Cafe"
-  className="mx-auto w-20 h-20 object-contain mb-3"
-/>
-          <h1 className="text-2xl font-bold text-[#8B1E1E]">
-            Odds Cafe Admin
-          </h1>
-          <p className="text-sm" style={{ color: "var(--brown-light)" }}>
-            Staff access only
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
+      {/* Black header */}
+      <header
+        style={{
+          background: "#000000",
+          padding: "28px 24px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "8px",
+        }}
+      >
+        <img
+          src="/rowan-logo.png"
+          alt="Rowan Coffee"
+          style={{ width: 72, height: 72, objectFit: "contain" }}
+        />
+        <h1 className="font-display text-2xl" style={{ color: "#E8D9B0" }}>
+          Rowan Coffee
+        </h1>
+        <p className="text-sm" style={{ color: "rgba(232,217,176,0.55)" }}>
+          Staff access only
+        </p>
+      </header>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium"
-              style={{ color: "var(--foreground)" }}
+      {/* Login form */}
+      <main className="flex-1 flex flex-col items-center justify-center px-6 py-10">
+        <div className="w-full max-w-sm">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium"
+                style={{ color: "var(--foreground)" }}
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Enter admin password"
+                value={password}
+                onChange={(e) => { setPassword(e.target.value); setError(""); }}
+                className="w-full px-4 py-3 rounded-xl border text-base outline-none"
+                style={{
+                  borderColor: error ? "#dc2626" : "var(--stamp-empty)",
+                  background: "#fff",
+                  color: "var(--foreground)",
+                }}
+                autoFocus
+              />
+              {error && <p className="text-sm text-red-600">{error}</p>}
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 rounded-xl font-semibold text-white text-base disabled:opacity-60"
+              style={{ background: "var(--brown)" }}
             >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Enter admin password"
-              value={password}
-              onChange={(e) => { setPassword(e.target.value); setError(""); }}
-              className="w-full px-4 py-3 rounded-xl border text-base outline-none"
-              style={{
-                borderColor: error ? "#dc2626" : "var(--stamp-empty)",
-                background: "#fff",
-                color: "var(--foreground)",
-              }}
-              autoFocus
-            />
-            {error && <p className="text-sm text-red-600">{error}</p>}
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-xl font-semibold text-white text-base disabled:opacity-60"
-            style={{ background: "var(--brown)" }}
-          >
-            {loading ? "Checking..." : "Enter Dashboard"}
-          </button>
-        </form>
-      </div>
-    </main>
+              {loading ? "Checking..." : "Enter dashboard"}
+            </button>
+          </form>
+        </div>
+      </main>
+    </div>
   );
 }

@@ -112,15 +112,11 @@ export default function AdminCustomerPage() {
   }
 
   useEffect(() => {
-    if (!password || loadedQueryPhoneRef.current) {
-      return;
-    }
+    if (!password || loadedQueryPhoneRef.current) return;
 
     const queryPhone = new URLSearchParams(window.location.search).get("phone");
     const digits = queryPhone?.replace(/\D/g, "").slice(-10) ?? "";
-    if (digits.length !== 10) {
-      return;
-    }
+    if (digits.length !== 10) return;
 
     loadedQueryPhoneRef.current = true;
     setPhoneInput(formatDisplay(digits));
@@ -218,171 +214,192 @@ export default function AdminCustomerPage() {
     : "";
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-start px-6 py-10">
-      <div className="w-full max-w-sm space-y-6">
-        {/* Header */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => { sessionStorage.removeItem("adminPw"); router.push("/admin"); }}
-            className="text-sm"
-            style={{ color: "var(--brown-light)" }}
-          >
-            ← Logout
-          </button>
-          <h1 className="text-xl font-bold" style={{ color: "var(--brown-dark)" }}>
-            Odds Cafe Dashboard
-          </h1>
-        </div>
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
+      {/* Black header */}
+      <header
+        style={{
+          background: "#000000",
+          padding: "28px 24px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "8px",
+        }}
+      >
+        <img
+          src="/rowan-logo.png"
+          alt="Rowan Coffee"
+          style={{ width: 72, height: 72, objectFit: "contain" }}
+        />
+        <h1 className="font-display text-2xl" style={{ color: "#E8D9B0" }}>
+          Rowan Coffee
+        </h1>
+        <p className="text-sm" style={{ color: "rgba(232,217,176,0.55)" }}>
+          Staff dashboard
+        </p>
+      </header>
 
-        {/* Quick links */}
-        <div className="flex gap-2">
-          <a
-            href="/qr"
-            target="_blank"
-            className="flex-1 py-2 rounded-xl text-center text-sm font-medium border"
-            style={{ borderColor: "var(--stamp-empty)", color: "var(--brown)" }}
-          >
-            View QR Code
-          </a>
-          <button
-            type="button"
-            onClick={() => setShowScanner((current) => !current)}
-            className="flex-1 py-2 rounded-xl text-center text-sm font-medium border"
-            style={{ borderColor: "var(--stamp-empty)", color: "var(--brown)" }}
-          >
-            {showScanner ? "Hide Scanner" : "Scan Customer"}
-          </button>
-        </div>
-
-        {showScanner && (
-          <div
-            className="rounded-2xl p-4 space-y-3"
-            style={{ background: "#fff", border: "1.5px solid var(--stamp-empty)" }}
-          >
-            <CustomerScanPanel onScan={handleScan} />
-          </div>
-        )}
-
-        {/* Lookup Form */}
-        <form onSubmit={lookupCustomer} className="space-y-3">
-          <label
-            className="block text-sm font-medium"
-            style={{ color: "var(--foreground)" }}
-          >
-            Customer phone number
-          </label>
-          <div className="flex gap-2">
-            <input
-              type="tel"
-              inputMode="numeric"
-              placeholder="(828) 555-0123"
-              value={phoneInput}
-              onChange={handlePhoneChange}
-              className="flex-1 px-4 py-3 rounded-xl border text-base outline-none"
-              style={{
-                borderColor: error ? "#dc2626" : "var(--stamp-empty)",
-                background: "#fff",
-                color: "var(--foreground)",
-              }}
-            />
+      <main className="flex-1 flex flex-col items-center px-6 py-8">
+        <div className="w-full max-w-sm space-y-6">
+          {/* Top bar: logout + scanner toggle */}
+          <div className="flex items-center justify-between">
             <button
-              type="submit"
-              disabled={loading}
-              className="px-4 py-3 rounded-xl font-semibold text-white disabled:opacity-60"
-              style={{ background: "var(--brown)" }}
+              onClick={() => { sessionStorage.removeItem("adminPw"); router.push("/admin"); }}
+              className="text-sm"
+              style={{ color: "var(--brown-light)" }}
             >
-              {loading ? "..." : "Look Up"}
+              ← Logout
             </button>
-          </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          {message && (
-            <p className="text-sm font-medium" style={{ color: "#16a34a" }}>
-              {message}
-            </p>
-          )}
-        </form>
-
-        {/* Customer Card */}
-        {customer && (
-          <div
-            className="rounded-2xl p-5 space-y-5"
-            style={{ background: "#fff", border: "1.5px solid var(--stamp-empty)" }}
-          >
-            {/* Customer Info */}
-            <div className="space-y-1">
-              <p className="font-semibold" style={{ color: "var(--brown-dark)" }}>
-                {displayPhone}
-              </p>
-              <p className="text-xs" style={{ color: "var(--brown-light)" }}>
-                Last visit: {customer.lastVisit} · {customer.redeemed} free drinks earned
-              </p>
-            </div>
-
-            {/* Reward Banner */}
-            {isReady && (
-              <div
-                className="rounded-xl p-3 text-center"
-                style={{ background: "var(--brown)", color: "#fff" }}
+            <div className="flex gap-2">
+              <a
+                href="/qr"
+                target="_blank"
+                className="px-3 py-1.5 rounded-lg text-xs font-medium border"
+                style={{ borderColor: "var(--stamp-empty)", color: "var(--brown)" }}
               >
-                <p className="font-semibold">🎉 Free drink ready to redeem!</p>
-              </div>
-            )}
-
-            {/* Stamp Grid */}
-            <div>
-              <div className="grid grid-cols-4 gap-2">
-                {Array.from({ length: TOTAL }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="w-full aspect-square rounded-full flex items-center justify-center text-base"
-                    style={{
-                      background: i < customer.stamps ? "var(--stamp-filled)" : "var(--stamp-empty)",
-                      color: i < customer.stamps ? "#fff" : "var(--brown-light)",
-                    }}
-                  >
-                    {i < customer.stamps ? "☕" : ""}
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-center mt-2" style={{ color: "var(--brown-light)" }}>
-                {customer.stamps} / {TOTAL} stamps
-              </p>
+                View QR
+              </a>
+              <button
+                type="button"
+                onClick={() => setShowScanner((c) => !c)}
+                className="px-3 py-1.5 rounded-lg text-xs font-medium border"
+                style={{ borderColor: "var(--stamp-empty)", color: "var(--brown)" }}
+              >
+                {showScanner ? "Hide scanner" : "Scan customer"}
+              </button>
             </div>
+          </div>
 
-            {/* Actions */}
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-3">
-                <button
-                  onClick={addStamp}
-                  disabled={actionLoading || customer.stamps >= TOTAL}
-                  className="flex-1 py-3 rounded-xl font-semibold text-white text-sm disabled:opacity-40"
-                  style={{ background: "var(--brown)" }}
-                >
-                  {actionLoading ? "..." : "+ Add Stamp"}
-                </button>
-                <button
-                  onClick={removeStamp}
-                  disabled={actionLoading || customer.stamps === 0}
-                  className="flex-1 py-3 rounded-xl font-semibold text-sm disabled:opacity-40"
-                  style={{ background: "var(--cream)", color: "var(--brown-dark)" }}
-                >
-                  {actionLoading ? "..." : "− Remove Stamp"}
-                </button>
+          {showScanner && (
+            <div
+              className="rounded-2xl p-4 space-y-3"
+              style={{ background: "#fff", border: "1.5px solid var(--stamp-empty)" }}
+            >
+              <CustomerScanPanel onScan={handleScan} />
+            </div>
+          )}
+
+          {/* Lookup Form */}
+          <form onSubmit={lookupCustomer} className="space-y-3">
+            <label
+              className="block text-sm font-medium"
+              style={{ color: "var(--foreground)" }}
+            >
+              Customer phone number
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="tel"
+                inputMode="numeric"
+                placeholder="(828) 555-0123"
+                value={phoneInput}
+                onChange={handlePhoneChange}
+                className="flex-1 px-4 py-3 rounded-xl border text-base outline-none"
+                style={{
+                  borderColor: error ? "#dc2626" : "var(--stamp-empty)",
+                  background: "#fff",
+                  color: "var(--foreground)",
+                }}
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="px-4 py-3 rounded-xl font-semibold text-white disabled:opacity-60"
+                style={{ background: "var(--brown)" }}
+              >
+                {loading ? "..." : "Look up"}
+              </button>
+            </div>
+            {error && <p className="text-sm text-red-600">{error}</p>}
+            {message && (
+              <p className="text-sm font-medium" style={{ color: "#16a34a" }}>
+                {message}
+              </p>
+            )}
+          </form>
+
+          {/* Customer Card */}
+          {customer && (
+            <div
+              className="rounded-2xl p-5 space-y-5"
+              style={{ background: "#fff", border: "1.5px solid var(--stamp-empty)" }}
+            >
+              {/* Customer Info */}
+              <div className="space-y-1">
+                <p className="font-semibold" style={{ color: "var(--brown-dark)" }}>
+                  {displayPhone}
+                </p>
+                <p className="text-xs" style={{ color: "var(--brown-light)" }}>
+                  Last visit: {customer.lastVisit} · {customer.redeemed} free drinks earned
+                </p>
               </div>
+
+              {/* Reward Banner */}
               {isReady && (
-                <button
-                  onClick={redeemReward}
-                  disabled={actionLoading}
-                  className="w-full py-3 rounded-xl font-semibold text-sm disabled:opacity-40"
+                <div
+                  className="rounded-xl p-3 text-center"
                   style={{ background: "var(--brown)", color: "#fff" }}
                 >
-                  {actionLoading ? "..." : "Redeem Reward"}
-                </button>
+                  <p className="font-semibold">🎉 Free drink ready to redeem!</p>
+                </div>
               )}
+
+              {/* Stamp Grid */}
+              <div>
+                <div className="grid grid-cols-4 gap-2">
+                  {Array.from({ length: TOTAL }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="w-full aspect-square rounded-full flex items-center justify-center text-base"
+                      style={{
+                        background: i < customer.stamps ? "var(--stamp-filled)" : "var(--stamp-empty)",
+                        color: i < customer.stamps ? "#fff" : "var(--brown-light)",
+                      }}
+                    >
+                      {i < customer.stamps ? "☕" : ""}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-center mt-2" style={{ color: "var(--brown-light)" }}>
+                  {customer.stamps} / {TOTAL} stamps
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-col gap-3">
+                <div className="flex gap-3">
+                  <button
+                    onClick={addStamp}
+                    disabled={actionLoading || customer.stamps >= TOTAL}
+                    className="flex-1 py-3 rounded-xl font-semibold text-white text-sm disabled:opacity-40"
+                    style={{ background: "var(--brown)" }}
+                  >
+                    {actionLoading ? "..." : "+ Add stamp"}
+                  </button>
+                  <button
+                    onClick={removeStamp}
+                    disabled={actionLoading || customer.stamps === 0}
+                    className="flex-1 py-3 rounded-xl font-semibold text-sm disabled:opacity-40"
+                    style={{ background: "var(--cream)", color: "var(--brown-dark)" }}
+                  >
+                    {actionLoading ? "..." : "− Remove stamp"}
+                  </button>
+                </div>
+                {isReady && (
+                  <button
+                    onClick={redeemReward}
+                    disabled={actionLoading}
+                    className="w-full py-3 rounded-xl font-semibold text-sm disabled:opacity-40"
+                    style={{ background: "var(--brown)", color: "#fff" }}
+                  >
+                    {actionLoading ? "..." : "Redeem reward"}
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
-    </main>
+          )}
+        </div>
+      </main>
+    </div>
   );
 }

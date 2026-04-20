@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; background: #faf8f5; font-family: 'Instrument Sans', system-ui, sans-serif; padding: 20px 24px; }
+  .group { margin-bottom: 14px; }
+  label { display: block; font-size: 13px; font-weight: 600; color: #1A1210; margin-bottom: 5px; }
+  input { width: 100%; box-sizing: border-box; padding: 11px 14px; border-radius: 10px; border: 1.5px solid #E8DDD4; font-family: 'Instrument Sans', sans-serif; font-size: 15px; color: #1A1210; background: #fff; outline: none; }
+  input:focus { border-color: #6B4F36; }
+  input.error { border-color: #DC2626; }
+  .hint { font-size: 11px; color: #8B6F56; margin-top: 3px; }
+  .err { font-size: 11px; color: #DC2626; margin-top: 3px; }
+</style>
+</head><body>
+<div class="group">
+  <label>Phone number</label>
+  <input type="tel" placeholder="(828) 555-0123">
+  <div class="hint">Enter your 10-digit US number</div>
+</div>
+<div class="group">
+  <label>Password</label>
+  <input type="password" value="••••••••">
+</div>
+<div class="group">
+  <label>Phone number</label>
+  <input type="tel" class="error" value="(828) 555">
+  <div class="err">Please enter a valid 10-digit US phone number.</div>
+</div>
+</body></html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; background: #faf8f5; font-family: 'Instrument Sans', system-ui, sans-serif; padding: 20px 24px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+  .item { text-align: center; }
+  .box { width: 52px; height: 52px; background: #fff; border: 1.5px solid #E8DDD4; margin-bottom: 6px; }
+  .name { font-size: 10px; font-weight: 600; color: #4A3526; }
+  .val { font-size: 9px; color: #8B6F56; font-family: monospace; }
+</style>
+</head><body>
+<div class="row">
+  <div class="item"><div class="box" style="border-radius:0"></div><div class="name">None</div><div class="val">0px</div></div>
+  <div class="item"><div class="box" style="border-radius:8px"></div><div class="name">sm</div><div class="val">8px</div></div>
+  <div class="item"><div class="box" style="border-radius:12px"></div><div class="name">md</div><div class="val">12px</div></div>
+  <div class="item"><div class="box" style="border-radius:16px"></div><div class="name">lg</div><div class="val">16px</div></div>
+  <div class="item"><div class="box" style="border-radius:20px"></div><div class="name">xl</div><div class="val">20px</div></div>
+  <div class="item"><div class="box" style="border-radius:24px"></div><div class="name">2xl</div><div class="val">24px</div></div>
+  <div class="item"><div class="box" style="border-radius:9999px"></div><div class="name">full</div><div class="val">pill</div></div>
+</div>
+<div style="margin-top:16px; display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
+  <div style="padding:10px 16px; background:#fff; border-radius:8px; box-shadow:0 1px 2px rgba(74,53,38,0.06); font-size:11px; color:#8B6F56;">shadow-sm</div>
+  <div style="padding:10px 16px; background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(74,53,38,0.10); font-size:11px; color:#8B6F56;">shadow-md</div>
+  <div style="padding:10px 16px; background:#fff; border-radius:16px; box-shadow:0 8px 24px rgba(74,53,38,0.14); font-size:11px; color:#8B6F56;">shadow-lg</div>
+</div>
+</body></html>

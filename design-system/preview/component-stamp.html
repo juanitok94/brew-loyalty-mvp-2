@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; background: #faf8f5; font-family: 'Instrument Sans', system-ui, sans-serif; padding: 20px 24px; display: flex; gap: 24px; align-items: flex-start; }
+  .section { }
+  .label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #8B6F56; margin-bottom: 8px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .stamp { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .filled { background: #6B4F36; }
+  .empty { background: #E8DDD4; }
+  .progress { font-size: 11px; color: #8B6F56; text-align: center; margin-top: 8px; }
+  .ready-banner { background: #6B4F36; color: #fff; border-radius: 12px; padding: 12px 16px; text-align: center; }
+  .ready-banner .emoji { font-size: 24px; }
+  .ready-banner .title { font-size: 15px; font-weight: 700; margin-top: 4px; }
+  .ready-banner .sub { font-size: 11px; opacity: 0.85; }
+</style>
+</head><body>
+<div class="section">
+  <div class="label">In-progress (5/9)</div>
+  <div class="grid">
+    <div class="stamp filled">☕</div>
+    <div class="stamp filled">☕</div>
+    <div class="stamp filled">☕</div>
+    <div class="stamp filled">☕</div>
+    <div class="stamp filled">☕</div>
+    <div class="stamp empty"></div>
+    <div class="stamp empty"></div>
+    <div class="stamp empty"></div>
+    <div class="stamp empty"></div>
+  </div>
+  <div class="progress">5 / 9 stamps</div>
+</div>
+<div class="section">
+  <div class="label">Reward ready</div>
+  <div class="ready-banner">
+    <div class="emoji">🎉</div>
+    <div class="title">Free drink ready!</div>
+    <div class="sub">Show this to your barista</div>
+  </div>
+</div>
+</body></html>

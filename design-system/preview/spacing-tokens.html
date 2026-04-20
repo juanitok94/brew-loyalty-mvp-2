@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; background: #faf8f5; font-family: 'Instrument Sans', system-ui, sans-serif; padding: 20px 24px; }
+  .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 16px; }
+  .row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .box { border-radius: 4px; background: #6B4F36; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; font-weight: 600; }
+  .label { font-size: 10px; color: #8B6F56; font-family: monospace; }
+  .tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #8B6F56; width: 52px; flex-shrink: 0; }
+</style>
+</head><body>
+<div class="grid">
+  <div class="box" style="height:4px;border-radius:2px;background:#6B4F36"></div>
+  <div class="box" style="height:8px;border-radius:2px;background:#6B4F36"></div>
+  <div class="box" style="height:12px;border-radius:2px;background:#6B4F36"></div>
+  <div class="box" style="height:16px;border-radius:2px;background:#6B4F36"></div>
+  <div class="box" style="height:24px;border-radius:2px;background:#6B4F36"></div>
+  <div class="box" style="height:32px;border-radius:2px;background:#6B4F36"></div>
+</div>
+<div class="row"><span class="tag">4px</span><span class="label">--space-1</span></div>
+<div class="row"><span class="tag">8px</span><span class="label">--space-2</span></div>
+<div class="row"><span class="tag">12px</span><span class="label">--space-3</span></div>
+<div class="row"><span class="tag">16px</span><span class="label">--space-4</span></div>
+<div class="row"><span class="tag">24px</span><span class="label">--space-6</span></div>
+<div class="row"><span class="tag">32px</span><span class="label">--space-8</span></div>
+</body></html>
