@@ -13,11 +13,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { phone } = body;
+  const { phone, name } = body;
   if (!phone) {
     return NextResponse.json({ error: "phone required" }, { status: 400 });
   }
   const normalized = normalizePhone(phone);
-  const customer = await upsertCustomer(normalized);
+  const customer = await upsertCustomer(normalized, name);
   return NextResponse.json({ phone: normalized, ...customer });
 }

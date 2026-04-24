@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addStamp, normalizePhone } from "@/lib/stamps";
-import { verifyAdminPassword } from "@/lib/auth";
+import { verifyAdminToken } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { phone, password } = body;
-
-  if (!verifyAdminPassword(password)) {
+  if (!verifyAdminToken(req)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const body = await req.json();
+  const { phone } = body;
+
   if (!phone) {
     return NextResponse.json({ error: "phone required" }, { status: 400 });
   }

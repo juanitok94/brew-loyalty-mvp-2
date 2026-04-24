@@ -5,6 +5,7 @@ export type CustomerRecord = {
   stamps: number;
   lastVisit: string;
   redeemed: number;
+  name: string | null; // display_name from customers table
 };
 
 type ShopRow = {
@@ -51,11 +52,12 @@ function isoNow(): string {
   return new Date().toISOString();
 }
 
-function toCustomerRecord(card: LoyaltyCardRow): CustomerRecord {
+function toCustomerRecord(card: LoyaltyCardRow, displayName: string | null = null): CustomerRecord {
   return {
     stamps: card.stamp_count,
     lastVisit: card.last_stamp_at ? card.last_stamp_at.split("T")[0] : todayString(),
     redeemed: card.reward_count,
+    name: displayName,
   };
 }
 
@@ -89,14 +91,12 @@ async function findCustomerByPhone(phone: string): Promise<CustomerRow | null> {
   return (data as CustomerRow | null) ?? null;
 }
 
-async function createCustomer(phone: string): Promise<CustomerRow> {
+async function createCustomer(phone: string, name?: string): Promise<CustomerRow> {
   const normalizedPhone = normalizePhone(phone);
 
   const { data, error } = await db
     .from("customers")
-    .insert({
-      phone: normalizedPhone,
-    })
+    .insert({ phone: normalizedPhone, display_name: name ?? null })
     .select("id, phone, display_name, created_at, updated_at")
     .single();
 
@@ -145,10 +145,10 @@ async function createLoyaltyCard(shopId: string, customerId: string): Promise<Lo
   return data as LoyaltyCardRow;
 }
 
-async function getOrCreateCustomer(phone: string): Promise<CustomerRow> {
+async function getOrCreateCustomer(phone: string, name?: string): Promise<CustomerRow> {
   const existing = await findCustomerByPhone(phone);
   if (existing) return existing;
-  return createCustomer(phone);
+  return createCustomer(phone, name);
 }
 
 async function getOrCreateCard(shopId: string, customerId: string): Promise<LoyaltyCardRow> {
@@ -216,18 +216,19 @@ export async function getCustomer(phone: string): Promise<CustomerRecord | null>
       stamps: 0,
       lastVisit: todayString(),
       redeemed: 0,
+      name: customer.display_name, // include display_name even when no card yet
     };
   }
 
-  return toCustomerRecord(card);
+  return toCustomerRecord(card, customer.display_name); // pass display_name from customers row
 }
 
-export async function upsertCustomer(phone: string): Promise<CustomerRecord> {
+export async function upsertCustomer(phone: string, name?: string): Promise<CustomerRecord> {
   const shop = await getDefaultShop();
-  const customer = await getOrCreateCustomer(phone);
+  const customer = await getOrCreateCustomer(phone, name);
   const card = await getOrCreateCard(shop.id, customer.id);
 
-  return toCustomerRecord(card);
+  return toCustomerRecord(card, customer.display_name);
 }
 
 export async function addStamp(phone: string): Promise<CustomerRecord> {
