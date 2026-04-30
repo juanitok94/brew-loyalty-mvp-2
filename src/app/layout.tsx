@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inknut_Antiqua, Instrument_Sans } from "next/font/google";
+import { shopConfig } from "@/config/shop";
 import "./globals.css";
 
 const inknutAntiqua = Inknut_Antiqua({
@@ -15,17 +16,17 @@ const instrumentSans = Instrument_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Rowan Coffee — Loyalty Card",
-  description: "Your digital loyalty card for Rowan Coffee, Asheville NC",
+  title: `${shopConfig.name} — Loyalty Card`,
+  description: `Your digital loyalty card for ${shopConfig.name}, ${shopConfig.location}`,
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Rowan Coffee",
+    title: shopConfig.name,
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: shopConfig.colors.headerBg,
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -37,7 +38,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inknutAntiqua.variable} ${instrumentSans.variable}`}>
+    <html
+      lang="en"
+      className={`${inknutAntiqua.variable} ${instrumentSans.variable}`}
+      style={{
+        "--background": shopConfig.colors.background,
+        "--foreground": shopConfig.colors.foreground,
+        "--brown": shopConfig.colors.brandPrimary,
+        "--brown-light": shopConfig.colors.brandLight,
+        "--brown-dark": shopConfig.colors.brandDark,
+        "--cream": shopConfig.colors.cream,
+        "--stamp-empty": shopConfig.colors.stampEmpty,
+        "--stamp-filled": shopConfig.colors.stampFilled,
+      } as React.CSSProperties}
+    >
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>

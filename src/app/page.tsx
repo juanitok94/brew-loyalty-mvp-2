@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { STAMPS_REQUIRED } from "../lib/constants";
+import { shopConfig } from "@/config/shop";
 
 export default function HomePage() {
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function HomePage() {
       {/* Black header */}
       <header
         style={{
-          background: "#000000",
+          background: shopConfig.colors.headerBg,
           padding: "28px 24px",
           display: "flex",
           flexDirection: "column",
@@ -58,18 +59,18 @@ export default function HomePage() {
         }}
       >
         <img
-          src="/rowan-logo.png"
-          alt="Rowan Coffee"
+          src={shopConfig.logoPath}
+          alt={shopConfig.name}
           style={{ width: 72, height: 72, objectFit: "contain" }}
         />
-        <h1 className="font-display text-2xl" style={{ color: "#E8D9B0" }}>
-          Rowan Coffee
+        <h1 className="font-display text-2xl" style={{ color: shopConfig.colors.headerText }}>
+          {shopConfig.name}
         </h1>
         <p
           className="text-sm tracking-[0.2em] uppercase"
-          style={{ color: "rgba(232,217,176,0.55)" }}
+          style={{ color: shopConfig.colors.headerTextMuted }}
         >
-          Striving for balance
+          {shopConfig.tagline}
         </p>
       </header>
 
@@ -85,7 +86,7 @@ export default function HomePage() {
               Buy {STAMPS_REQUIRED} drinks
             </p>
             <p className="text-2xl font-semibold" style={{ color: "var(--brown)" }}>
-              Earn a free drink
+              Earn a {shopConfig.rewardDescription}
             </p>
             <p className="text-xs" style={{ color: "var(--brown-light)" }}>
               No app download needed
@@ -106,7 +107,7 @@ export default function HomePage() {
                 id="phone"
                 type="tel"
                 inputMode="numeric"
-                placeholder="(828) 555-0123"
+                placeholder={shopConfig.phone}
                 value={phone}
                 onChange={handleChange}
                 className="w-full px-4 py-3 rounded-xl border text-base outline-none transition-all"
@@ -128,7 +129,7 @@ export default function HomePage() {
               {loading ? "Loading..." : "See my card"}
             </button>
             <p className="text-[14px] text-center mt-2" style={{ color: "var(--brown-light)" }}>
-              Not valid on smoothies or frappes. One stamp per drink
+              {shopConfig.finePrint}
             </p>
           </form>
         </div>

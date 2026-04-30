@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import QRCode from "qrcode";
 import { STAMPS_REQUIRED } from "@/lib/constants";
+import { shopConfig } from "@/config/shop";
 
 type CustomerData = {
   phone: string;
@@ -95,7 +96,7 @@ function CardContent() {
     QRCode.toDataURL(qrTarget.toString(), {
       margin: 1,
       width: 192,
-      color: { dark: "#7B5A2A", light: "#FFFFFF" },
+      color: { dark: shopConfig.colors.brandPrimary, light: "#FFFFFF" },
     })
       .then((src) => { setQrCodeSrc(src); setQrInitialized(true); })
       .catch(() => setQrCodeSrc(""));
@@ -111,7 +112,7 @@ function CardContent() {
       {/* Black header */}
       <header
         style={{
-          background: "#000000",
+          background: shopConfig.colors.headerBg,
           padding: "28px 24px",
           display: "flex",
           flexDirection: "column",
@@ -120,15 +121,15 @@ function CardContent() {
         }}
       >
         <img
-          src="/rowan-logo.png"
-          alt="Rowan Coffee"
+          src={shopConfig.logoPath}
+          alt={shopConfig.name}
           style={{ width: 72, height: 72, objectFit: "contain" }}
         />
-        <h1 className="font-display text-2xl" style={{ color: "#E8D9B0" }}>
-          Rowan Coffee
+        <h1 className="font-display text-2xl" style={{ color: shopConfig.colors.headerText }}>
+          {shopConfig.name}
         </h1>
         {displayPhone && (
-          <p className="text-sm" style={{ color: "rgba(232,217,176,0.55)" }}>
+          <p className="text-sm" style={{ color: shopConfig.colors.headerTextMuted }}>
             {displayPhone}
           </p>
         )}
@@ -164,7 +165,9 @@ function CardContent() {
                 style={{ background: "var(--brown)", color: "#fff" }}
               >
                 <div className="text-4xl">🎉</div>
-                <p className="text-xl font-semibold">Free drink ready!</p>
+                <p className="text-xl font-semibold">
+                  {shopConfig.rewardDescription.charAt(0).toUpperCase() + shopConfig.rewardDescription.slice(1)} ready!
+                </p>
                 <p className="text-sm opacity-90">Show this to your barista to redeem</p>
               </div>
             ) : (
@@ -174,7 +177,7 @@ function CardContent() {
               >
                 <p className="text-sm font-medium" style={{ color: "var(--brown-dark)" }}>
                   {TOTAL - data.stamps} more {TOTAL - data.stamps === 1 ? "drink" : "drinks"} until
-                  your free drink
+                  your {shopConfig.rewardDescription}
                 </p>
               </div>
             )}
@@ -183,7 +186,7 @@ function CardContent() {
             <div
               className="rounded-2xl p-6"
               style={{
-                background: isReady ? "#FFF9F0" : "#fff",
+                background: isReady ? shopConfig.colors.rewardBg : "#fff",
                 border: "1.5px solid var(--stamp-empty)",
               }}
             >
@@ -218,7 +221,7 @@ function CardContent() {
                   {data.redeemed}
                 </p>
                 <p className="text-xs" style={{ color: "var(--brown-light)" }}>
-                  free drinks earned
+                  {shopConfig.rewardDescription}s earned
                 </p>
               </div>
             </div>
@@ -266,7 +269,7 @@ export default function CardPage() {
         <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
           <header
             style={{
-              background: "#000000",
+              background: shopConfig.colors.headerBg,
               padding: "28px 24px",
               display: "flex",
               flexDirection: "column",
@@ -275,12 +278,12 @@ export default function CardPage() {
             }}
           >
             <img
-              src="/rowan-logo.png"
-              alt="Rowan Coffee"
+              src={shopConfig.logoPath}
+              alt={shopConfig.name}
               style={{ width: 72, height: 72, objectFit: "contain" }}
             />
-            <h1 className="font-display text-2xl" style={{ color: "#E8D9B0" }}>
-              Rowan Coffee
+            <h1 className="font-display text-2xl" style={{ color: shopConfig.colors.headerText }}>
+              {shopConfig.name}
             </h1>
           </header>
           <div className="flex-1 flex items-center justify-center">

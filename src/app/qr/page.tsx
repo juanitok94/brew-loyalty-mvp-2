@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
 import { STAMPS_REQUIRED } from "@/lib/constants";
+import { shopConfig } from "@/config/shop";
 
 export default function QRPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -17,7 +18,7 @@ export default function QRPage() {
         width: 280,
         margin: 2,
         color: {
-          dark: "#000000",
+          dark: shopConfig.colors.brandDark,
           light: "#FFFFFF",
         },
       });
@@ -33,7 +34,7 @@ export default function QRPage() {
       {/* Black header */}
       <header
         style={{
-          background: "#000000",
+          background: shopConfig.colors.headerBg,
           padding: "28px 24px",
           display: "flex",
           flexDirection: "column",
@@ -42,15 +43,15 @@ export default function QRPage() {
         }}
       >
         <img
-          src="/rowan-logo.png"
-          alt="Rowan Coffee"
+          src={shopConfig.logoPath}
+          alt={shopConfig.name}
           style={{ width: 72, height: 72, objectFit: "contain" }}
         />
-        <h1 className="font-display text-2xl" style={{ color: "#E8D9B0" }}>
-          Rowan Coffee
+        <h1 className="font-display text-2xl" style={{ color: shopConfig.colors.headerText }}>
+          {shopConfig.name}
         </h1>
-        <p className="text-sm" style={{ color: "rgba(232,217,176,0.55)" }}>
-          Asheville, NC
+        <p className="text-sm" style={{ color: shopConfig.colors.headerTextMuted }}>
+          {shopConfig.location}
         </p>
       </header>
 
@@ -68,7 +69,7 @@ export default function QRPage() {
               Scan to join our loyalty program
             </p>
             <p className="text-sm" style={{ color: "var(--brown-light)" }}>
-              Buy {STAMPS_REQUIRED} drinks, earn a free one
+              Buy {STAMPS_REQUIRED} drinks, earn a {shopConfig.rewardDescription}
             </p>
             <p className="text-xs" style={{ color: "var(--stamp-empty)" }}>
               No app download needed

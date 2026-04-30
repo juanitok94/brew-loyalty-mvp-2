@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { STAMPS_REQUIRED } from "@/lib/constants";
+import { shopConfig } from "@/config/shop";
 
 type CustomerData = {
   phone: string;
@@ -233,7 +234,7 @@ export default function AdminCustomerPage() {
       {/* Black header */}
       <header
         style={{
-          background: "#000000",
+          background: shopConfig.colors.headerBg,
           padding: "28px 24px",
           display: "flex",
           flexDirection: "column",
@@ -242,14 +243,14 @@ export default function AdminCustomerPage() {
         }}
       >
         <img
-          src="/rowan-logo.png"
-          alt="Rowan Coffee"
+          src={shopConfig.logoPath}
+          alt={shopConfig.name}
           style={{ width: 72, height: 72, objectFit: "contain" }}
         />
-        <h1 className="font-display text-2xl" style={{ color: "#E8D9B0" }}>
-          Rowan Coffee
+        <h1 className="font-display text-2xl" style={{ color: shopConfig.colors.headerText }}>
+          {shopConfig.name}
         </h1>
-        <p className="text-sm" style={{ color: "rgba(232,217,176,0.55)" }}>
+        <p className="text-sm" style={{ color: shopConfig.colors.headerTextMuted }}>
           Staff dashboard
         </p>
       </header>
@@ -354,7 +355,7 @@ export default function AdminCustomerPage() {
                   {displayPhone}
                 </p>
                 <p className="text-sm" style={{ color: "var(--brown-light)" }}>
-                  Last visit: {customer.lastVisit} · {customer.redeemed} free drinks earned
+                  Last visit: {customer.lastVisit} · {customer.redeemed} {shopConfig.rewardDescription}s earned
                 </p>
               </div>
 
@@ -364,7 +365,7 @@ export default function AdminCustomerPage() {
                   className="rounded-xl p-3 text-center"
                   style={{ background: "var(--brown)", color: "#fff" }}
                 >
-                  <p className="font-semibold">🎉 Free drink ready to redeem!</p>
+                  <p className="font-semibold">🎉 {shopConfig.rewardDescription.charAt(0).toUpperCase() + shopConfig.rewardDescription.slice(1)} ready to redeem!</p>
                 </div>
               )}
 
@@ -439,7 +440,7 @@ export default function AdminCustomerPage() {
                   <input
                     type="tel"
                     inputMode="numeric"
-                    placeholder="(828) 555-0123"
+                    placeholder={shopConfig.phone}
                     value={phoneInput}
                     onChange={handlePhoneChange}
                     className="flex-1 px-4 py-3 rounded-xl border text-base outline-none"

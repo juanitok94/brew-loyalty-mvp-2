@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { shopConfig } from "@/config/shop";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function AdminLoginPage() {
       <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
         <header
           style={{
-            background: "#000000",
+            background: shopConfig.colors.headerBg,
             padding: "28px 24px",
             display: "flex",
             flexDirection: "column",
@@ -44,14 +45,14 @@ export default function AdminLoginPage() {
           }}
         >
           <img
-            src="/rowan-logo.png"
-            alt="Rowan Coffee"
+            src={shopConfig.logoPath}
+            alt={shopConfig.name}
             style={{ width: 72, height: 72, objectFit: "contain" }}
           />
-          <h1 className="font-display text-2xl" style={{ color: "#E8D9B0" }}>
-            Rowan Coffee
+          <h1 className="font-display text-2xl" style={{ color: shopConfig.colors.headerText }}>
+            {shopConfig.name}
           </h1>
-          <p className="text-sm" style={{ color: "rgba(232,217,176,0.55)" }}>
+          <p className="text-sm" style={{ color: shopConfig.colors.headerTextMuted }}>
             Staff access only
           </p>
         </header>
@@ -66,7 +67,7 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
       <header
         style={{
-          background: "#000000",
+          background: shopConfig.colors.headerBg,
           padding: "28px 24px",
           display: "flex",
           flexDirection: "column",
@@ -75,14 +76,14 @@ export default function AdminLoginPage() {
         }}
       >
         <img
-          src="/rowan-logo.png"
-          alt="Rowan Coffee"
+          src={shopConfig.logoPath}
+          alt={shopConfig.name}
           style={{ width: 72, height: 72, objectFit: "contain" }}
         />
-        <h1 className="font-display text-2xl" style={{ color: "#E8D9B0" }}>
-          Rowan Coffee
+        <h1 className="font-display text-2xl" style={{ color: shopConfig.colors.headerText }}>
+          {shopConfig.name}
         </h1>
-        <p className="text-sm" style={{ color: "rgba(232,217,176,0.55)" }}>
+        <p className="text-sm" style={{ color: shopConfig.colors.headerTextMuted }}>
           Staff access only
         </p>
       </header>
