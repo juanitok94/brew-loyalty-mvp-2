@@ -1,171 +1,110 @@
-# Brew Loyalty MVP — Project Summary
+# Brew Loyalty — Rowan Coffee
 
-## Overview
+Digital loyalty stamp card platform for independent coffee shops.
+Built by Peachy Kean DevOps LLC.
 
-Digital loyalty stamp card for **Odd’s Cafe** (West Asheville, NC).
+---
 
-Customers scan a QR code, enter their phone number, and receive a digital stamp card. Baristas add stamps via an admin interface. After reaching the stamp target, customers earn a free drink.
+## What it does
 
-No app download required. Mobile-first PWA.
+Customers enter their phone number at the counter (no app download required) and receive a digital stamp card. Baristas add stamps via a password-protected dashboard. After reaching the stamp target, customers earn a free drink.
+
+---
+
+## URLs staff need
+
+| URL | Who uses it | Purpose |
+|-----|-------------|---------|
+| `/` | Customers | Enter phone number, see stamp card |
+| `/admin?token=TOKEN` | Baristas | Login link — bookmarked on POS device |
+| `/qr` | Owner | Printable QR code to post at counter |
+
+The barista dashboard loads automatically after the token is verified. Give staff the `/admin?token=TOKEN` bookmark — they never type the token manually.
+
+---
+
+## Swapping branding for a new tenant
+
+All shop-specific values live in one file:
+
+```
+src/config/shop.ts
+```
+
+Edit the exported `shopConfig` object:
+
+```ts
+export const shopConfig = {
+  name: "Rowan Coffee",
+  tagline: "Striving for balance",
+  logoPath: "/rowan-logo.png",       // drop logo in /public
+  location: "Asheville, NC",
+  phone: "(828) 555-0123",           // used as input placeholder
+  rewardDescription: "free drink",
+  finePrint: "Not valid on smoothies or frappes. One stamp per drink",
+  stampsRequired: 9,
+  colors: { ... },
+}
+```
+
+No other application files need to change for a rebrand.
+
+---
+
+## Environment variables
+
+Set these in Vercel (or `.env.local` for local dev):
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SUPABASE_URL` | Yes | Supabase project URL |
+| `SUPABASE_SECRET_KEY` | Yes | Supabase service role key (server-only) |
+| `NEXT_PUBLIC_SHOP_SLUG` | Yes | Shop slug matching the `shops` table row (e.g. `rowan-coffee`) |
+| `ROWAN_ADMIN_TOKEN` | Yes | Secret token for the barista login link |
+
+---
+
+## Deploying
+
+1. Push to `master` — Vercel auto-deploys
+2. Set the four env vars above in the Vercel project dashboard
+3. Confirm the `shops` table in Supabase has a row with a matching `slug`
+4. Share the `/admin?token=TOKEN` link with staff
 
 ---
 
 ## Stack
 
-* Next.js 15 (App Router)
-* TypeScript
-* Tailwind CSS 4
-* Vercel (hosting + deployment)
-* Supabase (Postgres) — persistence layer (V1.1)
+- Next.js 15 (App Router, TypeScript)
+- Tailwind CSS 4
+- Supabase (Postgres) — server-side only, service role key
+- Vercel
 
 ---
 
-## Current Status
-
-```text
-MVP UI + flows        ✅ complete
-AI system + workflow  ✅ complete
-Schema + decisions    ✅ locked
-Persistence           ⏳ in progress (Supabase migration)
-```
-
----
-
-## Core Product Flow
-
-1. Customer scans QR code
-2. Enters phone number
-3. Views stamp card
-4. Barista adds stamps via `/admin`
-5. Customer earns reward after reaching stamp target
-
----
-
-## Architecture (V1.1)
-
-### Identity Model
-
-* Phone number = lookup key
-* No user accounts
-* No authentication for customers
-
-### Admin Access
-
-* Protected by environment variable:
-
-  ```
-  ODDS_ADMIN_PASSWORD
-  ```
-
----
-
-## Data Model (Supabase)
-
-Tables:
-
-* `customers`
-* `locations`
-* `customer_location_cards`
-* `stamp_events` (append-only event log)
-
-Derived:
-
-* `stamp_progress` (SQL view — never written to directly)
-
----
-
-## Key Design Decisions
-
-* **Supabase Postgres** replaces JSON-based storage
-* **Server-side only DB access** (service role, never client-side)
-* **No Supabase Auth** (overkill for this use case)
-* **Event-based model** (no mutable counters)
-* **SQL view for aggregation** (not app-side logic)
-* **Migration files are the source of truth** (not dashboard edits)
-
-Full details: see `docs/DECISIONS.md`
-
----
-
-## AI-Assisted Development System
-
-This project uses a structured XP-style workflow with multiple AI tools:
-
-* **Claude** → architecture, schema, docs, reasoning
-* **ChatGPT** → implementation clarity, SESSION-BRIEF generation
-* **Claude Code** → execution (writes code from spec)
-
-All work is driven by:
-
-* `AI-OPERATING-SYSTEM.md`
-* `XP-WORKFLOW.md`
-* `PATTERNS/SUPABASE.md`
-
----
-
-## Workflow
-
-1. Define task via `SESSION-BRIEF.md`
-2. Execute via Claude Code
-3. Review + refine
-4. Commit + deploy
-5. Merge to `master` after promotion
-
-No architecture changes during implementation.
-
----
-
-## Constraints (V1.1)
-
-* No authentication system
-* No client-side database access
-* No UI redesign
-* Single location (Odd’s Cafe)
-* Keep implementation simple (KISS / Occam’s Razor)
-
----
-
-## Repository Structure (high-level)
+## Repo structure
 
 ```
 src/
   app/
+    page.tsx               ← customer phone entry
+    card/page.tsx          ← customer stamp card
+    admin/page.tsx         ← barista login gate
+    admin/customer/page.tsx← barista dashboard
+    qr/page.tsx            ← printable QR code
     api/
-    admin/
-    card/
+      stamps/              ← customer card GET/POST
+      admin/               ← stamp, remove-stamp, redeem, lookup*
+  config/
+    shop.ts                ← ALL shop-specific values (single edit point)
   lib/
-    stamps.ts   ← data access layer (single source of truth)
-
+    stamps.ts              ← data access layer (Supabase)
+    auth.ts                ← admin token verification
+    db.ts                  ← Supabase client
+    constants.ts           ← re-exports stampsRequired from shopConfig
 docs/
-  DECISIONS.md
-  PROJECT-BRAIN.md (optional)
-
-ai-playbook/
-  AI-OPERATING-SYSTEM.md
-  XP-WORKFLOW.md
-  PATTERNS/
+  HANDOFF.md               ← new shop onboarding checklist
+  URLS.md                  ← quick URL reference
+  DECISIONS.md             ← locked architecture decisions
+design-system/             ← Rowan-owned assets, do not modify
 ```
-
----
-
-## Next Step
-
-Implement Supabase migration:
-
-* Create migration files
-* Add `db.ts` (server-only client)
-* Refactor `stamps.ts`
-* Update API routes
-* Preserve existing UX
-
----
-
-## Notes
-
-This project prioritizes:
-
-* Simplicity over completeness
-* Speed of iteration
-* Real-world usability for a small business
-
-Future features (analytics, multi-location, user accounts) will be added only when justified by actual usage.

@@ -10,7 +10,7 @@ Customers:
 - Show a QR code at the counter
 
 Baristas:
-- Look up customers by phone or QR scan
+- Look up customers by last 4 digits of phone (primary) or full phone
 - Add stamps
 - Remove incorrect stamps (correction)
 - Redeem rewards
@@ -27,13 +27,51 @@ Baristas:
 
 ---
 
+## Route Map
+
+| URL | File | Purpose |
+|-----|------|---------|
+| `/` | `src/app/page.tsx` | Customer phone entry |
+| `/card` | `src/app/card/page.tsx` | Customer stamp card view |
+| `/admin` | `src/app/admin/page.tsx` | Admin token verification gate |
+| `/admin/customer` | `src/app/admin/customer/page.tsx` | Barista dashboard — lookup, stamp, redeem |
+| `/qr` | `src/app/qr/page.tsx` | Printable QR code for counter |
+
+API routes live under `src/app/api/admin/` (stamp, remove-stamp, redeem, lookup, lookup-last4, verify) and `src/app/api/stamps/`.
+
+---
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `src/config/shop.ts` | **Single source of truth for all shop-specific values** — name, tagline, logo, colors, copy, stamp target |
+| `src/lib/stamps.ts` | Data access layer — all Supabase reads/writes for loyalty logic |
+| `src/lib/auth.ts` | Admin token verification (`ROWAN_ADMIN_TOKEN` env var) |
+| `src/lib/db.ts` | Supabase client (server-only, service role) |
+| `src/lib/constants.ts` | Re-exports `STAMPS_REQUIRED` from `shopConfig.stampsRequired` |
+
+---
+
+## Shop Config Pattern
+
+All hardcoded shop values were moved to `src/config/shop.ts`. To swap branding:
+1. Edit `shopConfig` in that file — name, logo path, colors, copy, stamp target
+2. Drop the new logo in `/public/`
+3. Update `NEXT_PUBLIC_SHOP_SLUG` env var in Vercel to match the `shops` table row
+4. No other files need to change
+
+CSS custom properties (`--background`, `--brown`, etc.) are injected from `shopConfig.colors` via inline style on `<html>` in `src/app/layout.tsx`. There are no hardcoded hex values in `globals.css`.
+
+---
+
 ## Core Data Model
 
 ### shops
 | Column | Notes |
 |---|---|
 | id | |
-| slug | URL-safe shop identifier (e.g. `odds`, `rowan`) |
+| slug | URL-safe shop identifier (e.g. `rowan-coffee`) |
 | name | Display name |
 | stamps_required | Stamp goal per reward cycle |
 
@@ -90,58 +128,21 @@ Baristas:
 
 ---
 
-## QR System
+## Environment Variables
 
-### Customer QR
-Encodes a URL: `/card?phone=+1XXXXXXXXXX`
-
-### Admin Scanner
-- Accepts: raw phone numbers, formatted numbers, URLs with phone query param
-- Uses: BarcodeDetector (primary), jsQR (fallback)
-- Includes scan guard to prevent repeated triggers
-
----
-
-## UI Structure
-
-### Homepage (`/`)
-- Phone input + "See My Card" button
-- Marketing copy (shop-branded)
-
-### Customer Card (`/card`)
-- Logo (transparent PNG, per-shop)
-- Stamp grid (3×3)
-- Progress display (e.g. 3 / 9)
-- QR code
-
-### Admin (`/admin`)
-- Login via password (per-shop env var)
-- Lookup by phone or QR scan
-- Actions: Add Stamp, Remove Stamp, Redeem Reward
+| Variable | Purpose |
+|----------|---------|
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_SECRET_KEY` | Service role key — server-only, never expose to client |
+| `NEXT_PUBLIC_SHOP_SLUG` | Shop slug matching `shops` table (e.g. `rowan-coffee`) |
+| `ROWAN_ADMIN_TOKEN` | Secret token for barista login link |
 
 ---
 
-## Multi-Tenant Architecture
+## DO NOT Touch
 
-Each shop is a row in `shops`. Per-shop config (name, slug, stamp goal, branding) lives in the DB — no code changes required to add a new tenant.
-
-Per-shop admin passwords are stored as environment variables:
-- `ODDS_ADMIN_PASSWORD`
-- `[SHOP_SLUG]_ADMIN_PASSWORD` for each additional tenant
-
-Per-shop branding (logo, colors, reward copy) is injected via shop config — not hardcoded in components.
-
-**Do not query `loyalty_cards` or `stamp_events` without a `shop_id` filter. Cross-tenant data leakage is a critical bug.**
-
----
-
-## UX Decisions
-
-- No app download required
-- Phone number = identity
-- Admin UI optimized for speed at counter
-- Customer UI optimized for clarity
-- Stamp correction (remove) is supported and audit-logged
+- `design-system/` — Rowan-owned design assets, out of scope for all code changes
+- `docs/` — documentation only, no app logic here
 
 ---
 
@@ -152,46 +153,29 @@ Per-shop branding (logo, colors, reward copy) is injected via shop config — no
 - Do NOT introduce Supabase Auth
 - Do NOT expose DB or service role key to client
 - Maintain production stability
-- Do NOT query across tenants
+- Do NOT query across tenants — always scope to `shop_id`
 
 ---
 
 ## Current Status
 
-- Fully working in production (Odds Café, West Asheville NC — pilot tenant)
-- Cross-device QR scanning verified (iPhone Safari + DuckDuckGo)
-- Transparent logo, 3×3 stamp grid, admin UX all implemented
+- Fully working in production (Rowan Coffee — active tenant)
 - Supabase migration complete — JSON flat file no longer in use
 - Multi-tenant schema live (`shop_id` scoping on all loyalty tables)
-
----
-
-## Active Work
-
-- Onboarding second tenant (in progress)
-- Per-shop branding system (colors, logo, reward copy via shop config)
-- Homepage copy updates per shop
+- All shop-specific values centralized in `src/config/shop.ts`
+- Admin uses last-4-digit lookup as primary flow; full phone as fallback
 
 ---
 
 ## Expectations for Claude
 
-- Locate correct files before editing
+- Read the relevant files before editing
 - Make minimal, surgical changes only
 - Preserve all working flows
 - Always scope DB queries to `shop_id`
 - Avoid touching unrelated components
-- Prefer clarity over cleverness
+- Do not touch `design-system/` for any reason
 - If unsure, inspect the repo and infer — do not guess
-
----
-
-## Global Workflow & Patterns
-
-This project follows the Peachy Kean DevOps AI playbook:
-https://github.com/juanitok94/ai-playbook
-
-Reference for: roles, XP loop, sprint execution, Supabase patterns.
 
 ---
 
