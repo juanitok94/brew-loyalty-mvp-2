@@ -2,7 +2,6 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import QRCode from "qrcode";
 import { STAMPS_REQUIRED } from "@/lib/constants";
 import { shopConfig } from "@/config/shop";
 
@@ -40,7 +39,6 @@ function CardContent() {
   const [data, setData] = useState<CustomerData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [qrCodeSrc, setQrCodeSrc] = useState("");
 
   async function loadCard(phone: string) {
     const response = await fetch(`/api/stamps?phone=${encodeURIComponent(phone)}`, {
@@ -84,23 +82,6 @@ function CardContent() {
       window.clearInterval(intervalId);
     };
   }, [rawPhone, router]);
-
-  const [qrInitialized, setQrInitialized] = useState(false);
-
-  useEffect(() => {
-    if (!data?.phone || qrInitialized) return;
-
-    const qrTarget = new URL("/admin/customer", window.location.origin);
-    qrTarget.searchParams.set("phone", data.phone);
-
-    QRCode.toDataURL(qrTarget.toString(), {
-      margin: 1,
-      width: 192,
-      color: { dark: shopConfig.colors.brandPrimary, light: "#FFFFFF" },
-    })
-      .then((src) => { setQrCodeSrc(src); setQrInitialized(true); })
-      .catch(() => setQrCodeSrc(""));
-  }, [data?.phone, qrInitialized]);
 
   const isReady = data ? data.stamps >= TOTAL : false;
   const displayPhone = data
@@ -229,24 +210,6 @@ function CardContent() {
             <p className="text-center text-xs" style={{ color: "var(--stamp-empty)" }}>
               Last visit: {data.lastVisit}
             </p>
-
-            {qrCodeSrc && (
-              <div
-                className="rounded-2xl p-5 text-center space-y-3"
-                style={{ background: "#fff", border: "1.5px solid var(--stamp-empty)" }}
-              >
-                <img
-                  src={qrCodeSrc}
-                  alt={`QR code for ${data.phone}`}
-                  className="mx-auto rounded-xl"
-                  width={192}
-                  height={192}
-                />
-                <p className="text-sm font-medium" style={{ color: "var(--brown-light)" }}>
-                  Show this at the counter
-                </p>
-              </div>
-            )}
 
             <button
               onClick={() => router.push("/")}
