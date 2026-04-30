@@ -18,6 +18,11 @@ const instrumentSans = Instrument_Sans({
 export const metadata: Metadata = {
   title: `${shopConfig.name} — Loyalty Card`,
   description: `Your digital loyalty card for ${shopConfig.name}, ${shopConfig.location}`,
+  openGraph: {
+    title: `${shopConfig.name} — Loyalty Card`,
+    description: `Your digital loyalty card for ${shopConfig.name}, ${shopConfig.location}`,
+    images: [{ url: "/rowan-logo.png" }],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
