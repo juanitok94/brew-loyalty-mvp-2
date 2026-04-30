@@ -35,6 +35,6 @@ The `/admin?token=TOKEN` URL is the **only link staff need**. Bookmark it on the
 
 ## Notes
 
-- `TOKEN` is the value of the `ROWAN_ADMIN_TOKEN` environment variable
+- `TOKEN` is the value of the `SHOP_ADMIN_TOKEN` environment variable
 - Customer phone numbers are stored in E.164 format (`+18285550123`) but displayed formatted
 - The stamp target is set in `src/config/shop.ts` → `stampsRequired`

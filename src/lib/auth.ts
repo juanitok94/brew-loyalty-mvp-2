@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 
 export function verifyAdminToken(req: NextRequest): boolean {
-  const expected = process.env.ROWAN_ADMIN_TOKEN;
+  const expected = process.env.SHOP_ADMIN_TOKEN;
   if (!expected) return false;
   const header = req.headers.get("authorization");
   if (!header?.startsWith("Bearer ")) return false;

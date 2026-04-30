@@ -60,7 +60,7 @@ Set these in Vercel (or `.env.local` for local dev):
 | `SUPABASE_URL` | Yes | Supabase project URL |
 | `SUPABASE_SECRET_KEY` | Yes | Supabase service role key (server-only) |
 | `NEXT_PUBLIC_SHOP_SLUG` | Yes | Shop slug matching the `shops` table row (e.g. `rowan-coffee`) |
-| `ROWAN_ADMIN_TOKEN` | Yes | Secret token for the barista login link |
+| `SHOP_ADMIN_TOKEN` | Yes | Secret token for the barista login link |
 
 ---
 

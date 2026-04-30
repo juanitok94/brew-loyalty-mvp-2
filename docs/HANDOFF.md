@@ -89,9 +89,9 @@ In the Vercel project dashboard → Settings → Environment Variables, set:
 | `SUPABASE_URL` | Your Supabase project URL |
 | `SUPABASE_SECRET_KEY` | Supabase service role key |
 | `NEXT_PUBLIC_SHOP_SLUG` | The shop slug (e.g. `battlecat`) |
-| `ROWAN_ADMIN_TOKEN` | A secret token you generate (see step 6) |
+| `SHOP_ADMIN_TOKEN` | A secret token you generate (see step 6) |
 
-> Note: `ROWAN_ADMIN_TOKEN` is the env var name in `src/lib/auth.ts`. If you fork for a new tenant, rename it to `[SHOP]_ADMIN_TOKEN` and update `auth.ts` accordingly.
+> Note: `SHOP_ADMIN_TOKEN` is the env var name in `src/lib/auth.ts`. If you fork for a new tenant, rename it to `[SHOP]_ADMIN_TOKEN` and update `auth.ts` accordingly.
 
 ---
 
@@ -103,7 +103,7 @@ The token can be any hard-to-guess string. Generate one:
 openssl rand -hex 32
 ```
 
-Set it as `ROWAN_ADMIN_TOKEN` in Vercel. This is the value staff will use in the login URL.
+Set it as `SHOP_ADMIN_TOKEN` in Vercel. This is the value staff will use in the login URL.
 
 ---
 

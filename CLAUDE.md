@@ -47,7 +47,7 @@ API routes live under `src/app/api/admin/` (stamp, remove-stamp, redeem, lookup,
 |------|---------|
 | `src/config/shop.ts` | **Single source of truth for all shop-specific values** — name, tagline, logo, colors, copy, stamp target |
 | `src/lib/stamps.ts` | Data access layer — all Supabase reads/writes for loyalty logic |
-| `src/lib/auth.ts` | Admin token verification (`ROWAN_ADMIN_TOKEN` env var) |
+| `src/lib/auth.ts` | Admin token verification (`SHOP_ADMIN_TOKEN` env var) |
 | `src/lib/db.ts` | Supabase client (server-only, service role) |
 | `src/lib/constants.ts` | Re-exports `STAMPS_REQUIRED` from `shopConfig.stampsRequired` |
 
@@ -135,7 +135,7 @@ CSS custom properties (`--background`, `--brown`, etc.) are injected from `shopC
 | `SUPABASE_URL` | Supabase project URL |
 | `SUPABASE_SECRET_KEY` | Service role key — server-only, never expose to client |
 | `NEXT_PUBLIC_SHOP_SLUG` | Shop slug matching `shops` table (e.g. `rowan-coffee`) |
-| `ROWAN_ADMIN_TOKEN` | Secret token for barista login link |
+| `SHOP_ADMIN_TOKEN` | Secret token for barista login link |
 
 ---
 
