@@ -35,7 +35,7 @@ type LoyaltyCardRow = {
   updated_at: string;
 };
 
-const DEFAULT_SHOP_SLUG = "rowan";
+const DEFAULT_SHOP_SLUG = process.env.NEXT_PUBLIC_SHOP_SLUG ?? "rowan-coffee";
 
 export function normalizePhone(raw: string): string {
   const digits = raw.replace(/\D/g, "");
